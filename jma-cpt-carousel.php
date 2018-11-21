@@ -10,51 +10,7 @@ http://kenwheeler.github.io/slick/
 
 function jma_carousel_css()
 {
-    return    '.slick-prev, .slick-next {
-        right: 30px!important;
-        z-index: 1;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
-
-    .slick-prev {
-        left: 10px!important;
-    }
-
-    .slick-prev:before, .slick-next:before {
-        font-size: 40px!important;
-    }
-
-    .jma-slick-inner {
-        position: relative;
-    }
-
-    .carousel-title-wrap {
-        display: block;
-        position: absolute;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.7);
-        top: 0;
-        bottom: 100%;
-        overflow: hidden;
-        -webkit-transition: all 0.3s;
-        /* Safari */
-        transition: all 0.3s;
-        text-align: center;
-    }
-
-    .jma-slick-inner:hover>.carousel-title-wrap {
-        bottom: 0
-    }
-
-    .carousel-title-wrap strong {
-        display: block;
-        top: 50%;
-        transform: translate(0, -50%);
-        position: absolute;
-        width: 100%;
-    }';
+    return    '';
 }
 
 
@@ -94,54 +50,84 @@ function jma_car_detect_shortcode($needle = '', $post_item = 0)
 }
 
 
-function jma_slick_carousel_scripts()
+function jma_car_scripts()
 {
     wp_enqueue_script('jma-cpt-carousel-js', plugins_url('/jcarousel.min.js', __FILE__), array('jquery'));
     wp_enqueue_style('jma-cpt-carousel-css', plugins_url('/jma-cpt-carousel.css', __FILE__));
-    wp_add_inline_style('jma-jma-carousel-css', jma_carousel_css());
+    wp_add_inline_style('jma-carousel-css', jma_carousel_css());
 }
 
-function jma_slick_carousel_template_redirect()
+function jma_car_template_redirect()
 {
     //template_builder.php
     if (is_page_template('template_builder.php') || jma_car_detect_shortcode('jma_car')) {
-        add_action('wp_enqueue_scripts', 'jma_slick_carousel_scripts');
+        add_action('wp_enqueue_scripts', 'jma_car_scripts');
     }
 }
-add_action('template_redirect', 'jma_slick_carousel_template_redirect');
+add_action('template_redirect', 'jma_car_template_redirect');
 
-function jma_slick_init()
+function jma_slick_init($item_id)
 {
     return    'jQuery(document).ready(function($) {
-  $(".jma-slick-wrap").slick({
-  slidesToShow: 8,
-  //infinite: false,
-  autoplay: true,
-  autoplaySpeed: 3000,
-  slidesToScroll: 2,
-  responsive: [
-    {
-      breakpoint: 1200,
-      settings: {
-        slidesToShow: 6,
-      }
-    },
-    {
-      breakpoint: 992,
-      settings: {
-        slidesToShow: 4,
-      }
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      }
-    }
-    // You can unslick at a given breakpoint now by adding: settings: "unslick" instead of a settings object
-  ]
-  });
+    $(function() {
+        var $jma_car = $("#' . $item_id . '");
+
+        $jma_car
+            .on("jcarousel:reload jcarousel:create", function () {
+                var carousel = $(this),
+                    width = carousel.innerWidth();
+
+                if (width >= 900) {
+                    num = 8;
+                } else if (width >= 700) {
+                    num = 6;
+                }else if (width >= 500) {
+                    num = 3;
+                }else{
+                    num = 2;
+                }
+                width = width / num;
+
+                carousel.jcarousel("items").css("width", Math.ceil(width) + "px");
+
+
+        carousel.jcarouselAutoscroll({
+            interval: 3000,
+            target: "+=2",
+            autostart: true
+        })
+            })
+            .jcarousel({
+                wrap: "circular"
+            });
+
+        $(".jma-car-control-prev")
+            .jcarouselControl({
+                target: "-=1"
+            });
+
+        $(".jma-car-control-next")
+            .jcarouselControl({
+                target: "+=1"
+            });
+
+        /*$(".jma-car-pagination")
+            .on("jcarouselpagination:active", "a", function() {
+                $(this).addClass("active");
+            })
+            .on("jcarouselpagination:inactive", "a", function() {
+                $(this).removeClass("active");
+            })
+            .on("click", function(e) {
+                e.preventDefault();
+            })
+            .jcarouselPagination({
+                perPage: 1,
+                item: function(page) {
+                    return "<a href="#" + page + "">" + page + "</a>";
+                }
+            });*/
+    });
 });';
 }
 
@@ -151,18 +137,31 @@ function jma_carousel()
 
     // The Loop
     if ($the_query->have_posts()) {
-        echo '<div class="jma-slick-wrap">';
+        ob_start();
+        $item_id = uniqid();
+        echo '<div class="jma-car-wrapper">';
+        echo '<div id="' . $item_id . '" class="jma-car">';
+        echo '<ul>';
         while ($the_query->have_posts()) {
             $the_query->the_post();
-            echo '<div class="jma-slick-inner">';
-            echo '<a href="' . get_the_permalink() . '" class="carousel-title-wrap header-font"><strong>' . get_the_title() . '</strong></a>';
-            echo '<div>' . get_the_post_thumbnail(null, 'jma-carousel') . '</div>';
-            echo '</div>';
+            echo '<li class="jma-car-inner">';
+            echo '<a href="' . get_the_permalink() . '" class="jma-car-title-wrap header-font"><strong>' . get_the_title() . '</strong></a>';
+            echo '<div>' . get_the_post_thumbnail(null, 'jma-car') . '</div>';
+            echo '</li>';
         }
-        echo '</div>';
+        echo '</ul>';
+        echo '</div><!--jma-car-->';
+
+        echo '<a href="#" class="jma-car-control-prev">&lsaquo;</a>';
+        echo '<a href="#" class="jma-car-control-next">&rsaquo;</a>';
+        if ($paged) {
+            echo '<p class="jma-car-pagination"></p>';
+        }
+        echo '</div><!--jma-car-wrapper-->';
         echo '<script type="text/javascript">';
-        echo jma_slick_init();
+        echo jma_slick_init($item_id);
         echo '</script>';
+        return ob_get_clean();
         /* Restore original Post Data */
         wp_reset_postdata();
     } else {
@@ -176,10 +175,10 @@ function jma_carousel_image_sizes($sizes)
     global $jma_spec_options;
 
     // image size for header slider
-    $sizes['jma-carousel']['name'] = 'JMA Carousel';
-    $sizes['jma-carousel']['width'] = 250;
-    $sizes['jma-carousel']['height'] = 350;
-    $sizes['jma-carousel']['crop'] = true;
+    $sizes['jma-car']['name'] = 'JMA Carousel';
+    $sizes['jma-car']['width'] = 250;
+    $sizes['jma-car']['height'] = 350;
+    $sizes['jma-car']['crop'] = true;
     return $sizes;
 }
 add_filter('themeblvd_image_sizes', 'jma_carousel_image_sizes');

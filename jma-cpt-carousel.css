@@ -1,0 +1,128 @@
+.jma-car-wrapper {
+    margin: 20px auto;
+    position: relative;
+}
+
+/** Carousel **/
+
+.jma-car {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.jma-car ul {
+    width: 10000em;
+    overflow: hidden;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jma-car li {
+    width: 200px;
+    float: left;
+}
+
+.jma-car img {
+    display: block;
+    max-width: 100%;
+    height: auto !important;
+}
+
+/** Carousel Controls **/
+
+.jma-car-control-prev, .jma-car-control-next {
+    position: absolute;
+    top: 50%;
+    margin-top: -15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    background: #4E443C;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 0 1px #000;
+    font: 24px/27px Arial, sans-serif;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+}
+
+.jma-car-control-prev {
+    left: 15px;
+}
+
+.jma-car-control-next {
+    right: 15px;
+}
+
+/** Carousel Pagination **/
+
+.jma-car-pagination {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    margin: 0;
+}
+
+.jma-car-pagination a {
+    text-decoration: none;
+    display: inline-block;
+    font-size: 11px;
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+    background: #fff;
+    color: #4E443C;
+    border-radius: 10px;
+    text-indent: -9999px;
+    margin-right: 7px;
+    -webkit-box-shadow: 0 0 2px #4E443C;
+    -moz-box-shadow: 0 0 2px #4E443C;
+    box-shadow: 0 0 2px #4E443C;
+}
+
+.jma-car-pagination a.active {
+    background: #4E443C;
+    color: #fff;
+    opacity: 1;
+    -webkit-box-shadow: 0 0 2px #F0EFE7;
+    -moz-box-shadow: 0 0 2px #F0EFE7;
+    box-shadow: 0 0 2px #F0EFE7;
+}
+
+.jma-car-inner {
+    position: relative;
+}
+
+.jma-car-title-wrap {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.7);
+    top: 0;
+    bottom: 100%;
+    overflow: hidden;
+    -webkit-transition: all 0.3s;
+    /* Safari */
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.jma-car-inner:hover>.jma-car-title-wrap {
+    bottom: 0
+}
+
+.jma-car-title-wrap strong {
+    display: block;
+    top: 50%;
+    transform: translate(0, -50%);
+    position: absolute;
+    width: 100%;
+}
