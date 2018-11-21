@@ -94,7 +94,15 @@ function jma_slick_init($item_id)
         carousel.jcarouselAutoscroll({
             interval: 3000,
             target: "+=2",
-            autostart: true
+            autostart: true,
+            create: $("#' . $item_id . '").hover(function()
+    {
+        $(this).jcarouselAutoscroll("stop");
+    },
+    function()
+    {
+        $(this).jcarouselAutoscroll("start");
+    })
         })
             })
             .jcarousel({
